@@ -84,7 +84,7 @@ def adminloginlog_list():
 
 @admin.route('/userloginlog/list/')
 def userloginlog_list():
-    return render_template('admin/userloginlog.html')
+    return render_template('admin/userloginlog_list.html')
 
 
 @admin.route('/auth/add/')
