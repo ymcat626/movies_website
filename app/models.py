@@ -143,6 +143,10 @@ class Admin(db.Model):
     adminlogs = db.relationship("Adminlog", backref='admin')
     oplogs = db.relationship("Oplog", backref='admin')
 
+    def check_pwd(self, pwd):
+        from werkzeug.security import check_password_hash
+        return check_password_hash(self.pwd, pwd)
+
     def __repr__(self):
         return "<Admin %r >" % self.name
 
@@ -173,10 +177,32 @@ class Oplog(db.Model):
 
 
 if __name__ == "__main__":
+    # db.metadata.clear()
+    # db.metadata.reflect(engine=engine)
     # db.create_all()
-    role = Role(
-        name="超级管理员",
-        auths=""
+    # role = Role(
+    #     name="超级管理员",
+    #     auths=""
+    # )
+    # db.session.add(role)
+    # db.session.commit()
+
+    # sqlalchemy.exc.InvalidRequestError: Table 'user' is already defined for this
+    # MetaData instance.  Specify 'extend_existing=True' to redefine options and columns
+    # on an existing Table object.
+    from werkzeug.security import generate_password_hash
+
+    admin = Admin(
+        name="asimov",
+        pwd=generate_password_hash("asimov"),
+        is_super=0,
+        role_id=1
     )
-    db.session.add(role)
-    db.session.commit()
+    try:
+        db.session.add(admin)
+        db.session.commit()
+    except:
+        db.session.rollback()
+
+    finally:
+        db.session.close()
