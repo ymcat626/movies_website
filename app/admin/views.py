@@ -12,6 +12,7 @@ def admin_login_req(f):
         if 'admin' not in session:
             return redirect(url_for('admin.login', next=request.url))
         return f(*args, **kwargs)
+    
 
     return decorated_function
 
